@@ -104,6 +104,7 @@ def retrieve_documents(summary: str) -> list:
     results = index.query(summary_vector, top_k=5, include_metadata=True)
     return [match["metadata"] for match in results["matches"]]
 
+
 # Main function
 def process_url(url: str) -> dict:
     try:
