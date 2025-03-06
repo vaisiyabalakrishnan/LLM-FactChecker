@@ -19,7 +19,7 @@ classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnl
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Initialize Google Fact Check API
-api_key = "YOUR_GOOGLE_API_KEY"
+api_key = "AIzaSyAsTvUkuOZBLSAOu5WeekJMdyoO7siQ-oE"
 fact_check_service = build("factchecktools", "v1alpha1", developerKey=api_key)
 
 
