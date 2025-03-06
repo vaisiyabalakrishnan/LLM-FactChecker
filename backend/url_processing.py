@@ -5,7 +5,6 @@ import pinecone
 from sentence_transformers import SentenceTransformer
 import requests
 from bs4 import BeautifulSoup
-from serpapi import GoogleSearch
 
 # Initialise FastAPI app
 app = FastAPI()
@@ -104,7 +103,6 @@ def retrieve_documents(summary: str) -> list:
     results = index.query(summary_vector, top_k=5, include_metadata=True)
     return [match["metadata"] for match in results["matches"]]
 
-
 # Main function
 def process_url(url: str) -> dict:
     try:
@@ -156,3 +154,13 @@ def process_url(url: str) -> dict:
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# API endpoint
+@app.post("/process-url")
+async def process_url_endpoint(url: str):
+    return process_url(url)
+
+# Run FastAPI app
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
