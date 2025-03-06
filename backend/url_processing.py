@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import spacy
 from transformers import pipeline
-import pinecone
+from pinecone import Pinecone
 from sentence_transformers import SentenceTransformer
 import requests
 from bs4 import BeautifulSoup
@@ -17,8 +17,8 @@ summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
 # Initialize Pinecone (vector database)
-pinecone.init(api_key="pcsk_5JwvRy_BxzmowFyrYy8HKEdeXZosURrcsfhEUM2QcPssEjE1A4nRUSFQ7MVESuDFqNGVJp")
-index = pinecone.Index("fact-checking-db")
+pc = Pinecone(api_key="pcsk_5JwvRy_BxzmowFyrYy8HKEdeXZosURrcsfhEUM2QcPssEjE1A4nRUSFQ7MVESuDFqNGVJp")
+index = pc.Index("fact-checking-db")
 
 # Load embedding model (to convert text into numerical vectors)
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -154,6 +154,7 @@ def process_url(url: str) -> dict:
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 # API endpoint
 @app.post("/process-url")
