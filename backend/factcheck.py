@@ -2,14 +2,19 @@
 # need to format the response such that it can be displayed clearly on the website
 # check input: the type of info given
 
-
+import os
+from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
 import json
 
+
+
 def fact_check(claim, evidence):
+    load_dotenv()
+
     client = InferenceClient(
 	provider="novita",
-	api_key="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")
+	api_key=os.getenv("LLAMA_KEY"))
 
     evidence = "\n".join([f"Evidence: {title}" for title in evidence])
     
