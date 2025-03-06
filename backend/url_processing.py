@@ -107,8 +107,8 @@ def process_url(url: str) -> dict:
         evidence = fact_check_claim(summary)
 
         return {
-            "summary": summary,
-            "fact_checks": evidence
+            "Summary": summary,
+            "Fact Checks": evidence
         }
     
     except Exception as e:
