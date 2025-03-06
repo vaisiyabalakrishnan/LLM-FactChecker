@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 import spacy
 from transformers import pipeline
-from pinecone import Pinecone
 from sentence_transformers import SentenceTransformer
 import requests
 from bs4 import BeautifulSoup
@@ -16,12 +15,12 @@ nlp = spacy.load("en_core_web_sm")
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
-# Initialize Pinecone (vector database)
-pc = Pinecone(api_key="pcsk_5JwvRy_BxzmowFyrYy8HKEdeXZosURrcsfhEUM2QcPssEjE1A4nRUSFQ7MVESuDFqNGVJp")
-index = pc.Index("fact-checking-db")
-
 # Load embedding model (to convert text into numerical vectors)
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# Initialize Google Fact Check API
+api_key = "YOUR_GOOGLE_API_KEY"
+fact_check_service = build("factchecktools", "v1alpha1", developerKey=api_key)
 
 
 # Extract text from article (user inputs url into our website)
@@ -68,40 +67,34 @@ def classify_topic(text: str) -> str:
     # Return most likely topic
     return result["labels"][0] 
 
-# Query public fact-checking databases for relevant evidence
-def query_databases(entities: list, topic: str) -> list:
+
+# Query Google Fact Check API for fact checks
+def query_fact_check(entities: list, topic: str) -> list:
     # Combine entities and topic into a search query
-    query_terms = []
-    for entity in entities:
-        query_terms.append(entity[0])
-    query_terms.append(topic)
+    query_terms = [entity[0] for entity in entities] + [topic]
     query = " ".join(query_terms)
 
-    # Perform a search (SerpAPI)
-    def search(query):
-        params = {
-            "q": query,
-            "api_key": "a17f44b09203fd9e3955a53dfc6c9acc9dba5fa5"
-        }
-        response = requests.get("https://serpapi.com/search", params=params)
-        if response.status_code == 200:
-            return response.json().get("organic_results", [])
-        else:
-            print(f"Error searching: {response.status_code}")
-            return []
+    try:
+        request = fact_check_service.claims().search(query=query)
+        response = request.execute()
+
+        fact_checks = []
+        if 'claims' in response:
+            for claim in response['claims']:
+                for review in claim.get("claimReview", []):
+                    fact_checks.append({
+                        "title": review.get("title", "No title"),
+                        "summary": review.get("text", "No summary available"),
+                        "source": review.get("publisher", {}).get("name", "Unknown source"),
+                        "url": review.get("url", "#"),
+                        "rating": review.get("textualRating", "No rating")
+                    })
+        return fact_checks
     
-    search_results = search(query)
-    return search_results
+    except Exception as e:
+        print(f"Error querying Google Fact Check API: {e}")
+        return []
 
-
-# Retrieve semantically similar documents to summary
-def retrieve_documents(summary: str) -> list:
-    # Convert summary into vector (SentenceTransformer)
-    summary_vector = embedding_model.encode(summary).tolist()
-
-    # Query Pinecone for similar documents
-    results = index.query(summary_vector, top_k=5, include_metadata=True)
-    return [match["metadata"] for match in results["matches"]]
 
 # Main function
 def process_url(url: str) -> dict:
@@ -126,23 +119,19 @@ def process_url(url: str) -> dict:
         topic = classify_topic(summary)
         print(f"Topic: {topic}")
 
-        # Query public databases for evidence
-        evidence = query_databases(entities, topic)
+        ## Query Google Fact Check API for fact checks
+        evidence = query_fact_check(entities, topic)
         print(f"Evidence: {evidence}")
-
-        # Retrieve similar documents from Pinecone
-        similar_docs = retrieve_documents(summary)
-        print(f"Similar Documents: {similar_docs}")
-
-        # Combine results
-        all_documents = evidence + similar_docs
 
         # Format the results
         formatted_results = []
-        for doc in all_documents:
+        for doc in evidence:
             formatted_results.append({
-                "title": doc.get("title", "No title"),
-                "summary": doc.get("snippet", "No summary available")
+                "title": doc["title"],
+                "summary": doc["summary"],
+                "source": doc["source"],
+                "url": doc["url"],
+                "rating": doc["rating"]
             })
 
         return {
