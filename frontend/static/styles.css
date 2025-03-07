@@ -1,0 +1,188 @@
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-section h2 {
+    color: #6200ea; /* Purple */
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.intro-text {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Fact-Check Form */
+.fact-check-form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.fact-check-form h3 {
+    color: #6200ea; /* Purple */
+    margin-bottom: 1.5rem;
+}
+
+.fact-check-form img {
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.fact-check-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #6200ea; /* Purple */
+}
+
+.fact-check-form input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.fact-check-form input[type="text"]:focus {
+    border-color: #6200ea; /* Purple */
+    outline: none;
+}
+
+.fact-check-form button {
+    background-color: #6200ea; /* Purple */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.fact-check-form button:hover {
+    background-color: #3700b3; /* Darker Purple */
+}
+
+.error-message {
+    color: #ff4444; /* Red */
+    margin-top: 1rem;
+    font-weight: bold;
+
+form input[type="text"]:focus {
+    border-color: #6200ea; /* Purple */
+    outline: none;
+}
+
+form button {
+    background-color: #6200ea; /* Purple */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #3700b3; /* Darker Purple */
+}
+
+/* Results Page Styles */
+.results-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.results-container h2 {
+    color: #6200ea; /* Purple */
+    margin-bottom: 1.5rem;
+}
+
+.results-container h3 {
+    color: #333;
+    margin-top: 1.5rem;
+}
+
+.results-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.results-container ul li {
+    background-color: #f4f4f9;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.results-container ul li a {
+    color: #6200ea; /* Purple */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.results-container ul li a:hover {
+    color: #3700b3; /* Darker Purple */
+}
+
+.results-container p {
+    margin: 0.5rem 0;
+}
+
+/* About Page Styles */
+.about-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-container h2 {
+    color: #6200ea; /* Purple */
+    margin-bottom: 1.5rem;
+}
+
+.about-container p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+main {
+    animation: fadeIn 0.5s ease-in-out;
+}
+}

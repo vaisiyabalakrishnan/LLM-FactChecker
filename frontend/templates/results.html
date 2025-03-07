@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Results</h2>
+    
+    <h3>Summary:</h3>
+    <p>{{ summary }}</p>
+    
+    <h3>Entities:</h3>
+    <ul>
+        {% for entity in entities %}
+            <li>{{ entity[0] }} ({{ entity[1] }})</li>
+        {% endfor %}
+    </ul>
+    
+    <h3>Fact-Check Result:</h3>
+    <p><strong>Verdict:</strong> {{ result.verdict }}</p>
+    <p><strong>Truth Score:</strong> {{ result.score }}</p>
+    <p><strong>Explanation:</strong> {{ result.explanation }}</p>
+    
+    <h3>Related Articles:</h3>
+    <ul>
+        {% for article in related_articles %}
+            <li>
+                <a href="{{ article.Link }}" target="_blank">{{ article.Title }}</a>
+                <p>{{ article.Snippet }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <a href="/">Back to Home</a>
+{% endblock %}
