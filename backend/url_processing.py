@@ -65,36 +65,83 @@ def summarize_article(text: str) -> str:
         print(f"Error summarizing article text: {e}")
         return None
 
-
-# Query Google Fact Check API for fact checks
-def fact_check_claim(summary: str) -> list:
+# Extract entities from summary (spaCy)
+def extract_entities(summary: str) -> list:
     try:
-        url = f"https://factchecktools.googleapis.com/v1alpha1/claims:search?query={summary}&languageCode=en&key={api_key}"
-        
-        data = requests.get(url).json()
-       
-        results = []
-
-        if "claims" in data:
-            for claim in data["claims"]:
-                claim_text = claim.get("text", "No claim text found")
-                for review in claim.get("claimReview", []):
-                    results.append({
-                        "claim": claim_text,
-                        "fact_checker": review["publisher"]["name"],
-                        "rating": review["textualRating"],
-                        "url": review["url"]
-                    })
-        
-        return results
-    
+        doc = nlp(summary)
+        entities = [(ent.text, ent.label_) for ent in doc.ents]
+        return entities
     except Exception as e:
-        print(f"Error querying Google Fact Check API: {e}")
+        print(f"Error extracting entities: {e}")
+        return []
+
+# Query public google for relevant evidence
+def query_google(entities: list) -> list:
+    try:
+        # Combine entities into a search query
+        query_terms = [entity[0] for entity in entities]
+        query = " ".join(query_terms)
+        print(f"Search query: {query}")
+
+        # Perform a search using SerpAPI
+        def search(query: str) -> list:
+            params = {
+                "q": query,
+                "api_key": "3c31e8239b027eddbb900a8c072758ab8635ab3daf17326a2444ab90857b618a" 
+            }
+            response = requests.get("https://serpapi.com/search", params=params)
+            if response.status_code == 200:
+                return response.json().get("organic_results", [])
+            else:
+                print(f"Error searching: {response.status_code}")
+                return []
+
+        search_results = search(query)
+        
+        list = []
+
+        for result in search_results:
+            title = result.get("title", "")
+            snippet = result.get("snippet", "").replace("\n", " ")
+            link = result.get("link", "")
+            list.append(f"Title: {title} \n Snippet: {snippet} \n Link: {link}")
+        
+        return list
+
+    except Exception as e:
+        print(f"Error querying databases: {e}")
         return []
 
 
+# # Query Google Fact Check API for fact checks
+# def fact_check_claim(summary: str) -> list:
+#     try:
+#         url = f"https://factchecktools.googleapis.com/v1alpha1/claims:search?query={summary}&languageCode=en&key={api_key}"
+        
+#         data = requests.get(url).json()
+       
+#         results = []
+
+#         if "claims" in data:
+#             for claim in data["claims"]:
+#                 claim_text = claim.get("text", "No claim text found")
+#                 for review in claim.get("claimReview", []):
+#                     results.append({
+#                         "claim": claim_text,
+#                         "fact_checker": review["publisher"]["name"],
+#                         "rating": review["textualRating"],
+#                         "url": review["url"]
+#                     })
+        
+#         return results
+    
+#     except Exception as e:
+#         print(f"Error querying Google Fact Check API: {e}")
+#         return []
+
+
 # Main function
-def process_url(url: str) -> dict:
+def main(url: str) -> dict:
     try:
         article_text = extract_article_text(url)
         if not article_text:
@@ -104,11 +151,15 @@ def process_url(url: str) -> dict:
         if not summary:
             raise HTTPException(status_code=400, detail="Failed to summarize article")
 
-        evidence = fact_check_claim(summary)
+        entities = extract_entities(summary)
+        if not entities:
+            raise HTTPException(status_code=400, detail="Failed to extract entities")
+
+        evidence = query_google(entities)
 
         return {
             "Summary": summary,
-            "Fact Checks": evidence
+            "Evidence": evidence
         }
     
     except Exception as e:
@@ -117,8 +168,8 @@ def process_url(url: str) -> dict:
 
 # API endpoint
 @app.post("/process-url")
-async def process_url_endpoint(url: str):
-    return process_url(url)
+async def main_endpoint(url: str):
+    return main(url)
 
 # Run FastAPI app
 if __name__ == "__main__":
