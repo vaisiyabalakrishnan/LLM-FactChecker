@@ -1,127 +1,134 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2e8cf; /* Light gray background */
+    color: #333;
+    line-height: 1.6;
+    align-items: center;
+}
+
+footer {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    color: #5f5f5f;
+}
+
+header {
+    font-family: 'Arial', sans-serif;
+    background-color: #e63946;
+    padding: 1rem 0;
+    text-align: center;
+    color: #f2e8cf;
+    font-size: x-large;
+
+}
+
+.header-link {
+    color: inherit; /* Inherits the color from the parent (h1) */
+    text-decoration: none; /* Removes underline */
+    cursor: pointer; /* Ensures the cursor changes to a pointer on hover */
+}
+
+.header-link:hover {
+    color: inherit; /* Keeps the same color on hover */
+    text-decoration: none; /* Ensures no underline appears on hover */
+}
+
 /* Welcome Section */
 .welcome-section {
     text-align: center;
     margin-bottom: 2rem;
     padding: 2rem;
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 2rem auto;
 }
 
 .welcome-section h2 {
-    color: #6200ea; /* Purple */
+    color: #e63946;
     font-size: 2rem;
     margin-bottom: 1rem;
+    font-weight: 600;
 }
 
 .intro-text {
     font-size: 1.1rem;
-    color: #555;
+    color: #333;
     line-height: 1.8;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
 /* Fact-Check Form */
-.fact-check-form {
+.welcome-section form {
     background-color: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     margin: 0 auto;
     text-align: center;
 }
 
-.fact-check-form h3 {
-    color: #6200ea; /* Purple */
-    margin-bottom: 1.5rem;
-}
-
-.fact-check-form img {
-    margin-bottom: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.fact-check-form label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #6200ea; /* Purple */
-}
-
-.fact-check-form input[type="text"] {
+.welcome-section input[type="text"] {
     width: 100%;
     padding: 0.75rem;
     margin-bottom: 1rem;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
 
-.fact-check-form input[type="text"]:focus {
-    border-color: #6200ea; /* Purple */
+.welcome-section input[type="text"]:focus {
+    border-color: #e63946; /* Pink */
     outline: none;
 }
 
-.fact-check-form button {
-    background-color: #6200ea; /* Purple */
+.welcome-section button {
+    background-color: #e63946; /* Pink */
     color: white;
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.fact-check-form button:hover {
-    background-color: #3700b3; /* Darker Purple */
+.welcome-section button:hover {
+    background-color: #bb2733;
 }
 
 .error-message {
-    color: #ff4444; /* Red */
+    color: #e63946;
     margin-top: 1rem;
-    font-weight: bold;
-
-form input[type="text"]:focus {
-    border-color: #6200ea; /* Purple */
-    outline: none;
-}
-
-form button {
-    background-color: #6200ea; /* Purple */
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-form button:hover {
-    background-color: #3700b3; /* Darker Purple */
+    font-weight: 500;
 }
 
 /* Results Page Styles */
 .results-container {
-    background-color: white;
+    text-align: center;
+    margin-bottom: 2rem;
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 2rem auto;
 }
 
 .results-container h2 {
-    color: #6200ea; /* Purple */
+    color: #e91e63; /* Pink */
     margin-bottom: 1.5rem;
+    font-weight: 600;
 }
 
 .results-container h3 {
     color: #333;
     margin-top: 1.5rem;
+    font-weight: 500;
 }
 
 .results-container ul {
@@ -130,59 +137,31 @@ form button:hover {
 }
 
 .results-container ul li {
-    background-color: #f4f4f9;
+    background-color: #fafafa; /* Light gray */
     padding: 1rem;
     margin-bottom: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.results-container ul li:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .results-container ul li a {
-    color: #6200ea; /* Purple */
+    color: #e91e63; /* Pink */
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .results-container ul li a:hover {
-    color: #3700b3; /* Darker Purple */
+    color: #c2185b; /* Darker Pink */
 }
 
 .results-container p {
     margin: 0.5rem 0;
-}
-
-/* About Page Styles */
-.about-container {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.about-container h2 {
-    color: #6200ea; /* Purple */
-    margin-bottom: 1.5rem;
-}
-
-.about-container p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-main {
-    animation: fadeIn 0.5s ease-in-out;
-}
+    color: #666;
 }

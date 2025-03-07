@@ -2,24 +2,16 @@
 
 {% block content %}
     <div class="welcome-section">
-        <h2>Welcome to VeriFact!</h2>
+        <h2>Hello!</h2>
         <p class="intro-text">
-            VeriFact is your go-to tool for verifying the authenticity of online articles. 
-            Simply enter the URL of the article you want to check, and our AI-powered system will 
-            analyze the content, summarize it, and provide you with a fact-checking report. 
-            Stay informed and confident in the information you consume!
+            VeriFact verifies online articles with AI. Enter a URL, and we'll analyze, summarize, and fact-check it. Stay informed and confident!
         </p>
-    </div>
-
-    <div class="fact-check-form">
-        <h3>Fact-Check Your Article</h3>
-        <img src="{{ url_for('static', filename='images/dog.jpeg') }}" alt="Dog Image" width="200">
+        <br>
         <form method="POST" action="/">
-            <label for="url">Enter URL:</label>
-            <input type="text" id="url" name="url" required>
+            <input type="text" id="url" name="url" placeholder="Enter URL:" required>
+            <br>
             <button type="submit">Submit</button>
         </form>
-        
         {% if error %}
             <p class="error-message">{{ error }}</p>
         {% endif %}
