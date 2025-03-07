@@ -127,7 +127,7 @@ def fact_check(summary, related_articles):
             "You verify articles by referring to the related articles provided. If not, refer to other reliable sources."
             "Classify articles as TRUE, FALSE, or UNVERIFIED."
             "Provide a truth score from 0 to 100 based on evidence. For unverified sources, assign a score based on the likelihood of the claim's truth."
-            "Provide a short explanation based on evidence. Explanation should reference the evidence used."
+            "Provide a short explanation based on evidence. Quote the articles in your response."
         },
         {"role": "user", "content": 
             f"Summary: {summary}\n Related articles:\n{related_articles}\n\n"
@@ -143,34 +143,14 @@ def fact_check(summary, related_articles):
 
     response = completion.choices[0].message.content
     response = response.strip()
-    result = json.loads(response)
+    
+    try:
+        result = json.loads(response)
+    
+    except json.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return {"error": "Invalid JSON format", "response": response}
+
     return result
 
 
-
-# Main function
-def main(url: str) -> dict:
-    try:
-        article_text = extract_article_text(url)
-        if not article_text:
-            print("Failed to extract article text")
-
-        summary = summarize_article(article_text)
-        if not summary:
-            print("Failed to summarize article")
-
-        entities = extract_entities(summary)
-        if not entities:
-            print("Failed to extract entities")
-
-        related_articles = query_google(entities)
-        
-        return fact_check(summary, related_articles)
-        
-    except Exception as e:
-        print(e)
-
-
-if __name__ == "__main__":
-    LLaMa_response = main("https://www.channelnewsasia.com/sport/djokovic-says-hamstring-injury-behind-him-targets-sunshine-double-4984046")
-    print(LLaMa_response)
