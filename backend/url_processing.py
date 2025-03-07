@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from transformers import pipeline
-from googleapiclient.discovery import build
+import spacy
 import requests
 from bs4 import BeautifulSoup
 
@@ -11,9 +11,8 @@ app = FastAPI()
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
-# Initialize Google Fact Check API
-api_key = "AIzaSyAsTvUkuOZBLSAOu5WeekJMdyoO7siQ-oE"
-fact_check_service = build("factchecktools", "v1alpha1", developerKey=api_key)
+# Load spaCy model for NER (named entity recognition)
+nlp = spacy.load("en_core_web_sm")
 
 
 # Extract text from article (user inputs url into our website)
@@ -58,21 +57,36 @@ def extract_article_text(url: str) -> str:
 # Summarise article (HuggingFace)
 def summarize_article(text: str) -> str:
     try:
-        summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+        summary = summarizer(text, max_length=80, min_length=15, do_sample=False)
         return summary[0]["summary_text"]
 
     except Exception as e:
         print(f"Error summarizing article text: {e}")
         return None
 
+
 # Extract entities from summary (spaCy)
 def extract_entities(summary: str) -> list:
     try:
         doc = nlp(summary)
         entities = [(ent.text, ent.label_) for ent in doc.ents]
-        return entities
+        return entities[:4]
     except Exception as e:
         print(f"Error extracting entities: {e}")
+        return []
+
+
+# Perform a search using SerpAPI
+def search(query: str) -> list:
+    params = {
+        "q": query,
+        "api_key": "3c31e8239b027eddbb900a8c072758ab8635ab3daf17326a2444ab90857b618a" 
+    }
+    response = requests.get("https://serpapi.com/search", params=params)
+    if response.status_code == 200:
+        return response.json().get("organic_results", [])
+    else:
+        print(f"Error searching: {response.status_code}")
         return []
 
 # Query public google for relevant evidence
@@ -83,30 +97,21 @@ def query_google(entities: list) -> list:
         query = " ".join(query_terms)
         print(f"Search query: {query}")
 
-        # Perform a search using SerpAPI
-        def search(query: str) -> list:
-            params = {
-                "q": query,
-                "api_key": "3c31e8239b027eddbb900a8c072758ab8635ab3daf17326a2444ab90857b618a" 
-            }
-            response = requests.get("https://serpapi.com/search", params=params)
-            if response.status_code == 200:
-                return response.json().get("organic_results", [])
-            else:
-                print(f"Error searching: {response.status_code}")
-                return []
-
         search_results = search(query)
         
-        list = []
+        evidence = []
 
         for result in search_results:
             title = result.get("title", "")
             snippet = result.get("snippet", "").replace("\n", " ")
             link = result.get("link", "")
-            list.append(f"Title: {title} \n Snippet: {snippet} \n Link: {link}")
+            evidence.append({
+                "Title": title,
+                "Snippet": snippet,
+                "Link": link
+            })
         
-        return list
+        return evidence
 
     except Exception as e:
         print(f"Error querying databases: {e}")
@@ -159,6 +164,7 @@ def main(url: str) -> dict:
 
         return {
             "Summary": summary,
+            "Entities": entities,
             "Evidence": evidence
         }
     
