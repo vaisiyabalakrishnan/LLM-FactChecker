@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fact-Checking App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" >
+</head>
+<body>
+    <header>
+        <h1><a href="/" class="header-link">VeriFact</a></h1>
+        <img src="{{ url_for('static', filename='cat.gif') }}" alt="Cat Image" class = "cat">
+    </header>
+
+    <main>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Content block -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 VeriFact by Atharshlakshmi Vijayakumar and Balakrishnan Vaisiya</p>
+    </footer>
+</body>
+</html>

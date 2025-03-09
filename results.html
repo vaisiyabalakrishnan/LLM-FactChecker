@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+    {% if message %}
+    <div class="results-container">
+            <h2 style="color: #e63946;">{{ message }}</h2>
+    </div>
+    {% endif %}
+
+    {% if result %}
+    <div class="results-container">
+        
+        <h2>Result</h2>
+        
+        <h3>Summary:</h3>
+        <p>{{ summary }}</p>
+        <h3>Fact-Check Result:</h3>
+        <p><strong>Verdict:</strong> 
+        {% if result.verdict == "TRUE" %}
+            <div style="color:#28a745;"> ✔️ True</div>
+        {% elif result.verdict == "FALSE" %}
+            <div style="color:#dc3545;"> ❌ False</div>
+        {% else %}
+            <div style="color:#ffc107;"> ⚠️ Unverified</div>
+        {% endif %}
+        </p>
+        <p><strong>Truth Score:</strong> {{ result.score }}</p>
+        <p><strong>Explanation:</strong> {{ result.explanation }}</p>
+    </div>
+    
+
+    <div class="results-container">
+        <h2> Give us your feedback!</h2>
+        <form class="welcome-section" method = "POST" action = "/results">
+            <p>Rate the accuracy of this fact-check. </p>
+            <input name = "feedback" type="range" min="1" max="10" value="5">
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+        
+        
+
+    </div>
+   
+    <div class = "related-container">
+        <h2>Related Articles:</h2>
+        <ul>
+            {% for article in related_articles %}
+                <li>
+                    <a href="{{ article.Link }}" target="_blank">{{ article.Title }}</a>
+                    <p>{{ article.Snippet }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="welcome-section">
+        <h2>Hello!</h2>
+        <p class="intro-text">
+            VeriFact verifies online articles with AI. Enter a URL or text, and we'll analyze, summarize, and fact-check it. Stay informed and confident!
+        </p>
+        <br>
+       
+        <form method="GET" action = "/">
+            <button type = "submit" id="type" name ="type" value = "text">Text</button>
+            <button type = "submit" id="type" name ="type" value = "url">URL</button>
+        </form>
+        <br>
+        {% if form_type ==  "url" %}
+        <form method="POST" action="/results">
+            <input type="hidden" name="type" value="url">
+            <input type="text" id="url" name="url" placeholder="Enter URL:" required>
+            <br>
+            <button type="submit">Check URL</button>
+        </form>
+        {% endif %}
+
+        {% if form_type == "text" %}
+        <form method="POST" action="/results">
+            <input type="hidden" name="type" value="text">
+            <input type ="text" id="text" name="text" placeholder="Enter text:" required></input>
+            <br>
+            <button type="submit">Check Text</button>
+        </form>
+        {% endif %}
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+    </div>
+{% endblock %}
